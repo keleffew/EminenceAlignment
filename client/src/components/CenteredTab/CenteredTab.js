@@ -16,12 +16,12 @@ class CenteredTabs extends React.Component {
     constructor(props) {
       super(props);
 
-
       this.state = {
         value: 0,
         filteredEntryResults: this.props.entryResults.filter(entry => entry.unlockTime < Date.now()),
       };
 
+      this.handleChange = this.handleChange.bind(this)
 
     }
 
@@ -33,7 +33,6 @@ class CenteredTabs extends React.Component {
     //   });
     // }
 
-
   handleChange = (event, value) => {
     this.setState({
       value: value,
@@ -42,16 +41,13 @@ class CenteredTabs extends React.Component {
   };
 
   filterResults = (value) => {
-
     // filter based on time
     // 0 is released
     // 1 is available to be release but not yet released
     // 2 is still counting down
     switch(value) {
-        case 2:
-            return this.props.entryResults.filter(entry => entry.unlockTime > Date.now());
         case 1:
-            return this.props.entryResults.filter(entry => entry.unlockTime < Date.now());
+            return this.props.entryResults.filter(entry => entry.unlockTime > Date.now());
         default:
             return this.props.entryResults.filter(entry => entry.unlockTime < Date.now());
     }
@@ -70,12 +66,15 @@ class CenteredTabs extends React.Component {
           textColor="primary"
           centered
         >
-          <Tab label="Released" />
-          <Tab label="Available" />
-          <Tab label="Upcoming" />
+          <Tab label="The Library" />
+          <Tab label="The Vault" />
         </Tabs>
       </Paper>
-      <EntryList entryResults={this.state.filteredEntryResults}/>
+      <EntryList entryResults={this.state.filteredEntryResults}
+        amsterdamContractInstance={this.props.amsterdamContractInstance}
+        loadAllEntries={this.props.loadAllEntries}
+        account={this.props.account}
+      />
       </div>
     );
   }

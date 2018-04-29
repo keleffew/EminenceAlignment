@@ -4,10 +4,25 @@
 .input-group {
     display: flex;
     align-items: center;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.input-group:first-child {
+    margin-bottom: -26px !important;
 }
 .form-body {
     width: 100%;
 }
 .input-group > div {
     width: 100% !important;
+}
+
+.quote{
+    justify-content: center;
+    display: flex;
+}
+
+.quote1{
+    width:100% !important;
 }

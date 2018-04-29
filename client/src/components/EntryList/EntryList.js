@@ -2,6 +2,7 @@
 import React, { Component } from 'react';
 // import ReactDOM from 'react-dom';
 // import { BrowserRouter, Route, Switch } from 'react-router-dom';
+// import imagesLoaded from 'imagesloaded'
 
 // Import Scenes
 
@@ -9,7 +10,9 @@ import React, { Component } from 'react';
 import Card from '../Card/Card'
 
 // Import Styles
-// import './entryList.scss';
+import './EntryList.scss';
+
+// const masonry = window.Masonry;
 
 // Import Services
 
@@ -23,27 +26,35 @@ class entryList extends Component {
       description: "",
       countdown: "",
     };
-    
-    
 	}
 
   render() {
     // Dyanmically generate each table row based on data received from api
+    // console.log(this.props.entryResults);
     const entryListTable = this.props.entryResults.map((entry) => {
       return (
-            <Card
-             key={entry.id}
-             title={entry.title}
-             ipfs={entry.ipfs}
-             descrip={entry.descrip}
-             unlockTime={entry.unlockTime} 
-             type={entry.type}
-            />)
+            <div className="entryItem" key={entry.id}>
+              <div className="content">
+              <Card
+               title={entry.title}
+               ipfs={entry.ipfs}
+               desc={entry.descrip}
+               unlockTime={entry.unlockTime} 
+               type={entry.type}
+               isReleased={entry.id % 3 ? true : false}
+               id={entry.id}
+               amsterdamContractInstance={this.props.amsterdamContractInstance}
+               loadAllEntries={this.props.loadAllEntries}
+               account={this.props.account}
+              />
+              </div>
+            </div>)
     });
+
     return (
-      <div className="">
-        {entryListTable}
-      </div>
+      <div className="grid">
+            {entryListTable}
+      </div>  
     );
   }
 }

@@ -1,0 +1,32 @@
+.bottom{
+  display: flex;
+  justify-content: space-between;
+  padding: 0 15px;
+  align-items: baseline;
+}
+
+.button{
+  display: flex;
+  padding-bottom: 15px;
+}
+
+.ipfs{
+  display: flex;
+  a:hover{
+    color: $secondary-regular;
+  }
+}
+
+.group{
+  display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+}
+
+.type{
+  display: flex;
+}
+
+.pk{
+  display: flex;
+}

@@ -29,6 +29,7 @@ class Home extends Component {
     };
 
     this.newEntry = this.newEntry.bind(this);
+    this.loadAllEntries = this.loadAllEntries.bind(this);
   };
 
   componentWillMount() {
@@ -46,7 +47,7 @@ class Home extends Component {
        })
       })
 
-      this.state.amsterdamContractInstance.getTotalentries.call().then((result) => {
+      this.state.amsterdamContractInstance.getTotalEntries.call().then((result) => {
          console.log("Total Number of Entries: ", result.toNumber() );
          this.setState({
              totalEntries: result.toNumber(),
@@ -63,7 +64,7 @@ class Home extends Component {
   // We want to load all Entries. Currently no backend function that returns all entry ids for all Entries on blockchain
   // ASSUMPTION for this function: there will always be a entry for every ID in 1...n; n = total number of Entries
   loadAllEntries(){
-    this.state.amsterdamContractInstance.getTotalentries.call().then((result) => {
+    this.state.amsterdamContractInstance.getTotalEntries.call().then((result) => {
       this.setState({
           totalEntries: result.toNumber(),
       }); 
@@ -79,15 +80,18 @@ class Home extends Component {
       // Loop through each ID, get that entry from backend, se info in readable format on front-end, add each entry info to entryObjects array
       entryIdList.forEach( (entryId, index) => {
           this.state.amsterdamContractInstance.entries(entryId).then((entry) => {
+            console.log("entry: ",entry);
               idsProcessed++;
               var entryData = {
                 "id" : entry[0].toNumber(),
-                "unlockTime" : entry[1].toNumber(),
+                "unlockTime" : entry[1].c[0],
                 "owner" : entry[2],
                 "ipfs" : entry[3],
                 "title" : entry[4],
                 "descrip" : entry[5],
-                "type": "SAMPLE",
+                "type": entry[6].c[0],
+                "pubKey": entry[7],
+                "isReleased": entry[8],
               };
               entryObjects.push(entryData);
               // If we have looped through all Entries, set state
@@ -102,43 +106,6 @@ class Home extends Component {
       });      
       // Load and show all Entries 
    });
-/*
-
-      var entryObjects = [];
-      var idsProcessed = 0;
-
-      var entryIdList = []
-      for (var i = 1; i <= this.state.totalEntries; i++){
-          entryIdList.push(i);
-      }
-
-      // Loop through each ID, get that entry from backend, se info in readable format on front-end, add each entry info to entryObjects array
-      entryIdList.forEach( (entryId, index) => {
-          this.state.amsterdamContractInstance.entries(entryId).then((entry) => {
-              console.log("Entry: ", entry)
-              idsProcessed++;
-              var entryData = {
-                "id" : entry[0].toNumber(),
-                "unlockTime" : entry[1].toNumber(),
-                "owner" : entry[2],
-                "ipfs" : entry[3],
-                "title" : entry[4],
-                "descrip" : entry[5],
-                "type": "SAMPLE",
-              };
-              entryObjects.push(entryData);
-              // If we have looped through all Entries, set state
-              // Need to refactor this to account for async call within for loop. For loop finishes before async call does, so this is a workaround.
-              if (idsProcessed === this.state.totalEntries){
-                //console.log('Results',entryObjects)
-                this.setState({
-                    entryResults: entryObjects
-                });     
-              };
-          });
-      });*/
-
-
   }
 
 
@@ -195,7 +162,11 @@ class Home extends Component {
   render() {
     return (
       <div className="Home">
-        <CenteredTab entryResults={this.state.entryResults}/>
+        <CenteredTab entryResults={this.state.entryResults}
+          amsterdamContractInstance={this.state.amsterdamContractInstance}
+          loadAllEntries={this.state.loadAllEntries}
+          account={this.state.account}
+        />
       </div>
     );
   }
